@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import ScenaGuides from '@scena/react-guides';
-import useUiStore from '@/stores/useUiStore';
+import useUiStore from '@/stores/ui';
+import config from '@/config/config';
 
 export default function Guides() {
   const guides = useRef();
@@ -49,20 +50,20 @@ export default function Guides() {
           onDrag={() => guides.current.resize()}
           displayDragPos
           displayGuidePos
-          backgroundColor="rgb(38 38 38)"
+          backgroundColor={config.ui.Guide.bg}
           ref={e => {
             guides.current = e;
           }}
-          range={[-10000, 10000]}
+          range={[config.ui.Guide.x.range.l, config.ui.Guide.x.range.r]}
           type="horizontal"
           useResizeObserver
         />
       </div>
       <div className="top-[60px] left-[240px] h-[calc(100%-30px)] w-[30px] absolute z-10">
         <ScenaGuides
-          backgroundColor="rgb(38 38 38)"
+          backgroundColor={config.ui.Guide.bg}
           zoom={zoom}
-          range={[-10000, 10000]}
+          range={[config.ui.Guide.y.range.l, config.ui.Guide.y.range.r]}
           ref={e => {
             guidesV.current = e;
           }}
