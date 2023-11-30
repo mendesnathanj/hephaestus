@@ -4,6 +4,10 @@ import { useEffect, useState } from 'react';
 import useComponentsStore from '@/stores/components';
 import useQuery from '@/hooks/useQuery';
 
+function equals(a, b) {
+  return a === b;
+}
+
 function increment(options = {}) {
   if (!options.id) return;
 
@@ -65,6 +69,32 @@ function ComponentChild({ component, onDrop = (a) => {}, greedy = false }) {
   const extraStyles = isOverCurrent ? { 'background-color': 'green' } : {};
 
   increment((component.js.handlers || []).find((handler) => handler.function === 'increment'));
+
+  if (component.js.hide) {
+    const shouldHide = component.js.hide.some((rule) => {
+      if (rule.condition === 'equals') {
+        let val1;
+        if (typeof rule.a === 'object') {
+          const state = useComponentsStore.getState();
+          const component = state.components.find((c) => rule.a.id === c.id);
+          val1 = component.js.state[rule.a.name];
+        }
+
+        let val2;
+        val2 = rule.b;
+
+        console.log(rule);
+
+        console.log(val1, val2);
+
+        return equals(val1, val2);
+      }
+    });
+
+    console.log(shouldHide);
+
+    if (shouldHide) return null;
+  }
 
   const onClick = () => {
     const clickEvents = component
